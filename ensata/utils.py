@@ -3,8 +3,7 @@ import socketpool
 import ssl
 import wifi
 
-from constants import AUTOMATIC_IP_TIME_ZONE, SSID_NAME, SSID_PASSWORD, \
-                      MANUAL_TIME_ZONE, WORLD_TIME_API
+from constants import SSID_NAME, SSID_PASSWORD
 
 
 # TODO(Bobby): Implement multiple wifi hotspot support + hotspot scanning
@@ -17,22 +16,25 @@ def attempt_wifi_connection() -> bool:
         return False
 
 
-# I would do -> Union[str, int] but it seems CircuitPython doesn't 
-# implement the typing library :/
-def get_current_time():
+def center_text_x_axis(text_size: int, letters: int) -> int:
+    return (296 / 2) - (text_size * letters)
+
+
+# TODO(Bobby): multi-line centering support
+def center_text_y_axis(text_size: int, lines: int) -> int:
+    # 128: height of e-ink MagTag display
+    return (128 / 2) - (text_size * lines)
+
+
+def center_text(text_size: int, letters: int, lines: int = 0):
+    return (center_text_x_axis(text_size, letters),
+            center_text_y_axis(text_size, lines))
+
+
+# TODO(Bobby): Implement Wifi request session retention for efficency's sake
+def get_new_request_session():
     if not attempt_wifi_connection():
         return "Couldn't connect to Wifi"
 
     pool = socketpool.SocketPool(wifi.radio)
-    requests = adafruit_requests.Session(pool, ssl.create_default_context())
-
-    if AUTOMATIC_IP_TIME_ZONE:
-        response = requests.get(WORLD_TIME_API + "/ip")
-    else:
-        response = requests.get(WORLD_TIME_API + "/" + MANUAL_TIME_ZONE + ".txt")
-
-    if 300 >= response.status_code > 200:
-        return response.json()["unixtime"]
-    else:
-        return "Couldn't connect to WorldTimeAPI (" + \
-               str(response.status_code) + ")"
+    return adafruit_requests.Session(pool, ssl.create_default_context())

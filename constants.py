@@ -13,13 +13,18 @@ MANUAL_TIME_ZONE = "Asia/Tokyo"
 
 USER_NAME = "Bobby"
 
+
+# secrets.py based constants
+# Adjust these constants accordingly if you have an abnormal secrets.py file.
+ADAFRUIT_IO_USERNAME = secrets["adafruit_io_username"]
+ADAFRUIT_IO_KEY = secrets["adafruit_io_key"]
+SSID_NAME = secrets["ssid_name"]
+SSID_PASSWORD = secrets["ssid_password"]
+
+
 # API path constants
 # You probably don't need to mess with these constants unless you are getting
 # various API-related errors (i.e. Connected to the Internet but can't get
 # the time).
+ADAFRUIT_IO_API = "https://io.adafruit.com/api/v2/" + ADAFRUIT_IO_USERNAME
 WORLD_TIME_API = "https://worldtimeapi.org/api"
-
-# secrets.py based constants
-# Adjust these constants accordingly if you have an abnormal secrets.py file.
-SSID_NAME = secrets["ssid_name"]
-SSID_PASSWORD = secrets["ssid_password"]
